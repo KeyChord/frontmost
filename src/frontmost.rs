@@ -56,7 +56,7 @@ impl Detector {
                 let ns_running_app: &NSRunningApplication = associated_object
                     .downcast_ref::<NSRunningApplication>()
                     .expect("Failed to downcast ref associated object to an NSRunningApplication");
-                if let Some(bundle_identifier) = running_app.bundleIdentifier() {
+                if let Some(bundle_identifier) = ns_running_app.bundleIdentifier() {
                     let bundle_identifier = bundle_identifier.to_string();
                     if let Some(app_ref) = APP_INSTANCE.get() {
                         let mut app = app_ref.write().expect("Failed to write");
