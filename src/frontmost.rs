@@ -64,8 +64,11 @@ impl Detector {
                         app.update();
                     }
                 } else {
-                    app.set_frontmost(None);
-                    app.update();
+                    if let Some(app_ref) = APP_INSTANCE.get() {
+                        let mut app = app_ref.write().expect("Failed to write");
+                        app.set_frontmost(None);
+                        app.update();
+                    }
                 }
             }
         }
