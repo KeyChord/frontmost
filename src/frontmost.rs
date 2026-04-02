@@ -56,13 +56,15 @@ impl Detector {
                 let ns_running_app: &NSRunningApplication = associated_object
                     .downcast_ref::<NSRunningApplication>()
                     .expect("Failed to downcast ref associated object to an NSRunningApplication");
-                let frontmost_app_name = ns_running_app
-                    .localizedName()
-                    .expect("Failed to capture application localizedName");
-                if let Some(app_ref) = APP_INSTANCE.get() {
-                    let app_name_str = frontmost_app_name.to_string();
-                    let mut app = app_ref.write().expect("Failed to write");
-                    app.set_frontmost(&app_name_str);
+                if let Some(bundle_identifier) = running_app.bundleIdentifier() {
+                    let bundle_identifier = bundle_identifier.to_string();
+                    if let Some(app_ref) = APP_INSTANCE.get() {
+                        let mut app = app_ref.write().expect("Failed to write");
+                        app.set_frontmost(Some(bundle_identifier));
+                        app.update();
+                    }
+                } else {
+                    app.set_frontmost(None);
                     app.update();
                 }
             }
